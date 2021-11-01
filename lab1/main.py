@@ -8,8 +8,14 @@ t = sp.Symbol('t')
 R = 4
 Omega = 1
 
+#q = 5 * t
+#r = 1 - sp.sin(t)
+
 x = R * (Omega * t - sp.sin(Omega * t))
 y = R * (1 - sp.cos(Omega * t))
+
+#x = r * sp.cos(q)
+#y = r * sp.sin(q)
 
 Vx = sp.diff(x, t)
 Vy = sp.diff(y, t)
@@ -60,7 +66,7 @@ for i in np.arange(len(T)):
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 ax1.axis('equal')
-ax1.set(xlim=[-R, 12 * R], ylim=[-R, 3 * R])
+ax1.set(xlim=[-R * 2, 2 * R], ylim=[-R * 2, 2 * R])
 ax1.plot(X, Y)
 P, = ax1.plot(X[0], Y[0], marker='o')
 
@@ -72,6 +78,8 @@ Vline, = ax1.plot([X[0], X[0] + VX[0]], [Y[0], Y[0] + VY[0]], 'r')
 
 Wline, = ax1.plot([X[0], X[0] + VX[0] + WX[0]], [Y[0], Y[0] + VY[0] + WY[0]], 'g')
 
+Rline, = ax1.plot([X[0], (2*X[0] + CIRCLE_POINT_X[0]) / 2], [Y[0], (2*Y[0] + CIRCLE_POINT_Y[0]) / 2], 'b')
+
 
 def Rot2D(X, Y, Alpha):
     RX = X * np.cos(Alpha) - Y * np.sin(Alpha)
@@ -79,13 +87,13 @@ def Rot2D(X, Y, Alpha):
     return RX, RY
 
 
-ArrowX = np.array([-0.2 * R, 0, -0.2 * R])
-ArrowY = np.array([0.1 * R, 0, -0.1 * R])
+ArrowX = np.array([-0.02 * R, 0, -0.02 * R])
+ArrowY = np.array([0.01 * R, 0, -0.01 * R])
 RArrowX, RArrowY = Rot2D(ArrowX, ArrowY, math.atan2(VY[0], VX[0]))
 VArrow, = ax1.plot(RArrowX + X[0] + VX[0], RArrowY + Y[0] + VY[0], 'r')
 
-ArrowX_2 = np.array([-0.2 * R, 0, -0.2 * R])
-ArrowY_2 = np.array([0.1 * R, 0, -0.1 * R])
+ArrowX_2 = np.array([-0.02 * R, 0, -0.02 * R])
+ArrowY_2 = np.array([0.01 * R, 0, -0.01 * R])
 RArrowX_2, RArrowY_2 = Rot2D(ArrowX_2, ArrowY_2, math.atan2(VY[0] + WY[0], VX[0] + WX[0]))
 VArrow_2, = ax1.plot(RArrowX_2 + X[0] + VX[0] + WX[0], RArrowY_2 + Y[0] + VY[0] + WY[0], 'g')
 
@@ -98,6 +106,8 @@ def anima(j):  # анимация движения стрелочки
 
     Wline.set_data([X[j], X[j] + VX[j] + WX[j]], [Y[j], Y[j] + VY[j] + WY[j]])
 
+    Rline.set_data([X[j], (2*X[j] + CIRCLE_POINT_X[j]) / 2], [Y[j], (2*Y[j] + CIRCLE_POINT_Y[j]) / 2])
+
     RArrowX, RArrowY = Rot2D(ArrowX, ArrowY, math.atan2(VY[j], VX[j]))
 
     RArrowX_2, RArrowY_2 = Rot2D(ArrowX_2, ArrowY_2, math.atan2(VY[j] + WY[j], VX[j] + WX[j]))
@@ -109,8 +119,8 @@ def anima(j):  # анимация движения стрелочки
     circle1 = plt.Circle(((2*X[j] + CIRCLE_POINT_X[j]) / 2, (2*Y[j] + CIRCLE_POINT_Y[j]) / 2), RO[j], color='r', fill=False)
     ax1.add_artist(circle1)
 
-    return P, Vline, VArrow, VArrow_2, Wline, P_circle, circle1
+    return P, Vline, VArrow, VArrow_2, Wline, P_circle, circle1, Rline
 
 
-anim = FuncAnimation(fig, anima, frames=1000, interval=10, blit=True)
+anim = FuncAnimation(fig, anima, frames=1000, interval=50, blit=True)
 plt.show()
