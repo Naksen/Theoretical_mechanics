@@ -8,14 +8,14 @@ t = sp.Symbol('t')
 R = 4
 Omega = 1
 
-#q = 5 * t
-#r = 1 - sp.sin(t)
+q = 5 * t
+r = 1 - sp.sin(t)
 
-x = R * (Omega * t - sp.sin(Omega * t))
-y = R * (1 - sp.cos(Omega * t))
+#x = R * (Omega * t - sp.sin(Omega * t))
+#y = R * (1 - sp.cos(Omega * t))
 
-#x = r * sp.cos(q)
-#y = r * sp.sin(q)
+x = r * sp.cos(q)
+y = r * sp.sin(q)
 
 Vx = sp.diff(x, t)
 Vy = sp.diff(y, t)
@@ -56,11 +56,12 @@ for i in np.arange(len(T)):
     sub_1[i] = (X[i] + VX[i]) * (Y[i] + VY[i] + WY[i]) - (X[i] + VX[i] + WX[i]) * (Y[i] + VY[i])
     sub_2[i] = (X[i] + VX[i]) * (X[i] + VX[i] + WX[i]) + (Y[i] + VY[i]) * (Y[i] + VY[i] + WY[i])
 
-    WN[i] = math.sqrt(WX[i] ** 2 + WY[i] ** 2) * math.cos(math.atan2(sub_1[i], sub_2[i]))
+    # aplha = atan2(x1 * y2 - x2 * y1, x1 * x2 + y1 * y2) Формула из скалярного и векторного произведений векторов
+    WN[i] = math.sqrt(WX[i] ** 2 + WY[i] ** 2) * math.sin(math.atan2(sub_1[i], sub_2[i]))
     RO[i] = (VX[i] ** 2 + VY[i] ** 2) / WN[i]
 
-    CIRCLE_POINT_X[i] = (2 * RO[i] * VY[i]) / math.sqrt(VY[i]**2 + VX[i]**2)
-    CIRCLE_POINT_Y[i] = (2 * RO[i] * (-VX[i])) / math.sqrt(VY[i]**2 + VX[i]**2)
+    CIRCLE_POINT_X[i] = (2 * RO[i] * -VY[i]) / math.sqrt(VY[i]**2 + VX[i]**2)
+    CIRCLE_POINT_Y[i] = (2 * RO[i] * (VX[i])) / math.sqrt(VY[i]**2 + VX[i]**2)
 
 
 fig = plt.figure()
