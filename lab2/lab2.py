@@ -127,7 +127,6 @@ if __name__ == '__main__':
         ax.add_patch(cylinder)
         return body1, white_circle, spring, cylinder
 
-
     def anima(j):  # Анимация движения
         cylinder.center = OX[j], OY[j]
         white_circle.center = REC_X[j] + 0.75, 1.0
